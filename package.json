@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Storybook toolbar addon that renders the active story in several Storybook viewports side by side, each in a real iframe",
   "keywords": [
+    "storybook",
     "storybook-addon",
+    "essentials",
+    "preview",
     "viewport",
     "responsive",
     "multi-preview",
+    "multi",
     "multiple"
   ],
   "repository": {

@@ -55,4 +55,22 @@ Releases are fully automated by [semantic-release](https://semantic-release.gitb
 - **Merge `dev` → `main`** → the **stable** release is published to **`latest`** (`1.0.0`). Promotion is the release. Use a **merge commit** for the promotion (or title the squash `feat:`/`fix:`) — semantic-release reads the commit titles that land on `main`, and a `chore:`-titled squash would release nothing.
 - `feat!:` / `BREAKING CHANGE:` footers bump the major version on the next release.
 
-Release notes live in GitHub Releases (no `CHANGELOG.md` file is kept). Publishing requires the `NPM_TOKEN` secret — a token allowed to bypass 2FA (granular token with bypass enabled, or a classic Automation token).
+Release notes live in GitHub Releases (no `CHANGELOG.md` file is kept). Publishing requires the `NPM_TOKEN` secret — a granular access token allowed to bypass 2FA (classic Automation tokens also work but are deprecated by npm).
+
+**Rotating the token** (granular tokens expire; current one is 90 days). Run locally while logged in to npm:
+
+```bash
+npm token create --name GH_CI --expires 90 \
+  --packages-and-scopes-permission read-write \
+  --orgs-permission no-access \
+  --bypass-2fa \
+  --packages storybook-addon-multi-preview
+```
+
+Copy the printed token, then update the repo's **`NPM_TOKEN`** secret (Settings → Secrets and variables → Actions). Sanity-check the value before saving:
+
+```bash
+npm whoami --userconfig=/dev/null --//registry.npmjs.org/:_authToken=npm_PASTED_TOKEN
+```
+
+This must print your npm username — the `--userconfig=/dev/null` flag ensures you are testing the token itself, not your local npm login.
