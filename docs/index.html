@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>storybook-addon-multi-preview — one story, every viewport</title>
+<meta name="description" content="Storybook addon that renders the active story in several viewports side by side, each in a real iframe.">
+<style>
+  :root {
+    --accent: #ff4884;
+    --accent-soft: rgba(255, 72, 132, 0.08);
+    --ink: #2e2e33;
+    --muted: #67676f;
+    --bg: #fafafb;
+    --card: #ffffff;
+    --border: #e7e7ee;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0 8px; }
+  h2 {
+    font-size: 26px;
+    line-height: 1.3;
+    margin: 0 0 20px;
+    letter-spacing: -0.01em;
+  }
+  h2::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-top: 10px;
+  }
+  p { margin: 0 0 14px; color: var(--muted); }
+  p strong { color: var(--ink); }
+  ul { color: var(--muted); padding-left: 22px; margin: 0 0 14px; }
+  li { margin-bottom: 8px; }
+  li strong { color: var(--ink); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--accent-soft);
+    color: #c22e66;
+    padding: 2px 6px;
+    border-radius: 5px;
+  }
+  pre {
+    background: #24243a;
+    color: #eceaf6;
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 14px 0 22px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 88px 0 24px; }
+  .hero .logo { display: flex; justify-content: center; margin-bottom: 20px; }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    line-height: 1.15;
+  }
+  .hero .tagline { font-size: 19px; max-width: 560px; margin: 0 auto 30px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 12px 26px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(46, 46, 51, 0.1); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Feature cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 24px 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 16.5px; }
+  .card p { margin: 0; font-size: 15px; }
+  .card .glyph { color: var(--accent); font-size: 20px; display: block; margin-bottom: 10px; }
+
+  /* Configuration table */
+  .table-scroll { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 15px; }
+  th, td { text-align: left; padding: 13px 18px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  td code { white-space: nowrap; }
+
+  /* Screenshot placeholders */
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 22px; }
+  .shot {
+    border: 2px dashed rgba(255, 72, 132, 0.45);
+    border-radius: 14px;
+    background: var(--card);
+    min-height: 300px;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    text-align: center;
+  }
+  .shot .cap { color: var(--muted); font-size: 14.5px; max-width: 230px; }
+  .shot .cap strong { display: block; color: var(--accent); margin-bottom: 6px; }
+
+  /* Contributing + footer */
+  .contribute {
+    background: var(--accent-soft);
+    border: 1px solid rgba(255, 72, 132, 0.25);
+    border-radius: 14px;
+    padding: 28px;
+    margin: 24px 0 10px;
+  }
+  .contribute p { color: var(--ink); }
+  a { color: var(--accent); }
+  footer {
+    margin-top: 72px;
+    border-top: 1px solid var(--border);
+    padding: 28px 0 44px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  @media (max-width: 560px) {
+    .hero { padding-top: 64px; }
+    section { padding-top: 44px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="logo" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 -960 960 960" fill="#FF4884">
+      <path d="M600-160q-27.62 0-46.12-18.5-18.5-18.5-18.5-46.12v-510.76q0-27.62 18.5-46.12Q572.38-800 600-800h110.77q27.61 0 46.12 18.5 18.5 18.5 18.5 46.12v510.76q0 27.62-18.5 46.12-18.51 18.5-46.12 18.5H600Zm-350.77 0q-27.61 0-46.11-18.5-18.51-18.5-18.51-46.12v-510.76q0-27.62 18.51-46.12 18.5-18.5 46.11-18.5H360q27.62 0 46.12 18.5 18.5 18.5 18.5 46.12v510.76q0 27.62-18.5 46.12Q387.62-160 360-160H249.23Zm-24.61-575.38v510.76q0 9.24 7.69 16.93Q240-200 249.23-200H360q9.23 0 16.92-7.69 7.7-7.69 7.7-16.93v-510.76q0-9.24-7.7-16.93Q369.23-760 360-760H249.23q-9.23 0-16.92 7.69-7.69 7.69-7.69 16.93Z"/>
+    </svg>
+  </div>
+  <h1>storybook-addon-multi-preview</h1>
+  <p class="tagline">One story, every viewport — rendered side by side in real iframes, straight from your Storybook toolbar.</p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/gonzalofj/storybook-addon-multi-preview">View on GitHub</a>
+    <a class="btn" href="https://www.npmjs.com/package/storybook-addon-multi-preview">Install from npm</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="what-it-does">
+    <h2>What it does</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="glyph" aria-hidden="true">▚</span>
+        <h3>Real iframes</h3>
+        <p>Each viewport is a true iframe, so media queries and viewport-unit CSS actually behave at that width — no fake resizing.</p>
+      </div>
+      <div class="card">
+        <span class="glyph" aria-hidden="true">⤢</span>
+        <h3>Fit or no zoom</h3>
+        <p>Choose <strong>Fit zoom</strong> to scale every frame into the available width, or <strong>No zoom</strong> to inspect them at natural size.</p>
+      </div>
+      <div class="card">
+        <span class="glyph" aria-hidden="true">✦</span>
+        <h3>Zero config</h3>
+        <p>One line in <code>main.ts</code>. It uses the viewports you already configured for the core viewport addon, and a toolbar dropdown to switch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="getting-started">
+    <h2>Getting started</h2>
+    <p>Install the addon as a dev dependency:</p>
+<pre><code>npm install --save-dev storybook-addon-multi-preview
+# or: bun add / pnpm add / yarn add -D storybook-addon-multi-preview</code></pre>
+    <p>Register it in your Storybook config:</p>
+<pre><code>// .storybook/main.ts
+const config = {
+  // …your existing settings and addons
+  addons: ['storybook-addon-multi-preview'],
+};
+export default config;</code></pre>
+    <p>That's it. Storybook 10 auto-wires the addon's manager and preview code — restart the dev server and look for the split-screen icon in the toolbar.</p>
+  </section>
+
+  <section id="toolbar">
+    <h2>Toolbar</h2>
+    <ul>
+      <li><strong>Fit zoom</strong> — the default. Each frame is scaled to fit the preview area, so every viewport is visible at once.</li>
+      <li><strong>No zoom</strong> — frames render at natural size, ideal for pixel-level inspection.</li>
+      <li>The selected mode is shown <strong>next to the toolbar icon</strong>, just like the core viewport tool.</li>
+      <li><strong>Disable multi-preview</strong> — the dropdown's reset item turns the compare grid off and returns to the normal single preview.</li>
+    </ul>
+  </section>
+
+  <section id="configuration">
+    <h2>Configuration</h2>
+    <p>Tune per story or per project with the <code>multiPreview</code> parameter:</p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>multiPreview.disable</code></td><td>boolean</td><td>false</td><td>Turn the addon off for specific stories or the whole project.</td></tr>
+          <tr><td><code>multiPreview.viewports</code></td><td>string[]</td><td>all viewports</td><td>Keys of <code>parameters.viewport.options</code> to render.</td></tr>
+          <tr><td><code>multiPreview.zoom</code></td><td>number | 'fit' | 'none'</td><td>'fit'</td><td>Scale of each frame. A number is used as-is; the toolbar's “No zoom” takes precedence when selected.</td></tr>
+          <tr><td><code>multiPreview.gap</code></td><td>number</td><td>24</td><td>Gap between frames, in px.</td></tr>
+          <tr><td><code>multiPreview.padding</code></td><td>number</td><td>16</td><td>Padding around the row, in px.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <h2>Screenshots</h2>
+    <p>The real thing, in action:</p>
+    <div class="shots">
+      <!-- Replace this placeholder with: <img src="compare-grid.png" alt="Compare grid with several viewports side by side" style="width:100%;border-radius:14px"> -->
+      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>will show the compare grid in action</div></div>
+      <!-- Replace this placeholder with: <img src="fit-zoom.png" alt="Fit zoom mode scaling frames to fit" style="width:100%;border-radius:14px"> -->
+      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>Fit zoom — every viewport scaled into view</div></div>
+      <!-- Replace this placeholder with: <img src="no-zoom.png" alt="No zoom mode at natural size" style="width:100%;border-radius:14px"> -->
+      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>No zoom — natural-size frames for pixel inspection</div></div>
+    </div>
+  </section>
+
+  <section id="contributing">
+    <h2>Contributing</h2>
+    <div class="contribute">
+      <p><strong>Contributions are very welcome!</strong> Whether it's a bug report, a feature idea, documentation improvements, or a pull request — every bit of help is appreciated.</p>
+      <ul>
+        <li>Found a bug or have a suggestion? <a href="https://github.com/gonzalofj/storybook-addon-multi-preview/issues">Open an issue</a>.</li>
+        <li>Want to contribute code? See <a href="https://github.com/gonzalofj/storybook-addon-multi-preview/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> — development happens on the <code>dev</code> branch; pull requests targeting <code>dev</code> are reviewed and merged for each release.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Released under the <a href="https://github.com/gonzalofj/storybook-addon-multi-preview/blob/main/LICENSE">MIT License</a> · Built by Gonzalo Ferreyra
+  </div>
+</footer>
+
+</body>
+</html>
