@@ -34,11 +34,11 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Resolve dist-tag
         id: dist-tag
-        # Prereleases (1.2.3-beta.1) publish under `next` so `latest` is
-        # never a prerelease. Dress rehearsal: bump package.json to a
-        # prerelease in a normal PR, then tag vX.Y.Z-beta.N.
+        # Channel by prerelease identifier: 1.2.3-beta.1 -> `beta`,
+        # 1.2.3-rc.1 -> `rc`, stable -> `latest`. Production `latest` only
+        # moves when a stable version is released.
         run: |
-          echo "tag=$(node -p "require('./package.json').version.includes('-') ? 'next' : 'latest'")" >> "$GITHUB_OUTPUT"
+          echo "tag=$(node -p "const v = require('./package.json').version; v.includes('-') ? v.split('-')[1].split('.')[0] : 'latest'")" >> "$GITHUB_OUTPUT"
       - run: npm publish --provenance --access public --tag ${{ steps.dist-tag.outputs.tag }} ${{ inputs.dry_run == true && '--dry-run' || '' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

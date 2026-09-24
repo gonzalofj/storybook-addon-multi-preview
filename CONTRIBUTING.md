@@ -68,3 +68,9 @@ Versions follow [SemVer](https://semver.org) and are fully automated via [Releas
 | `docs:`, `chore:`, `refactor:`, `test:`, `ci:` | none |
 
 Release Please targets `dev` rather than `main` on purpose: version bumps travel with the regular promotion PRs instead of colliding with them, and every step works through pull requests, so branch protection stays fully enforced.
+
+### Beta channel
+
+Releases currently publish to the **beta** channel, not production: the release PR proposes prerelease versions (`1.1.0-beta.N`) and npm serves them only via `npm install storybook-addon-multi-preview@beta` — the `latest` dist-tag is untouched.
+
+To go stable, open a normal PR that sets `"prerelease": false` in `release-please-config.json`; the next release PR then promotes the current beta to the stable version, and merging it moves `latest`.
