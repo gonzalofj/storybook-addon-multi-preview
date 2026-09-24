@@ -47,11 +47,24 @@ PR titles follow [Conventional Commits](https://www.conventionalcommits.org) —
 3. Make sure `bun run build`, `bun run typecheck`, and `bun run test` all pass — CI runs on every PR.
 4. Open the PR **against `dev`**. PRs targeting `main` are reserved for release promotion by the maintainer.
 
-## Release process (automated)
+## Versioning and releases
 
-1. Merge feature PRs into `dev` with Conventional Commit titles (see above).
-2. The **Release Please** workflow maintains a release PR — "chore: release X.Y.Z" — that bumps `package.json` and updates `CHANGELOG.md` from the merged commits.
-3. Merging that release PR tags `vX.Y.Z` and creates the GitHub release automatically, which runs the **Publish to npm** workflow (requires the `NPM_TOKEN` repository secret).
-4. Promote by opening and merging a `dev` → `main` pull request — this updates the docs site and leaves `main` reflecting the released state.
+Versions follow [SemVer](https://semver.org) and are fully automated via [Release Please](https://github.com/googleapis/release-please) — never bump `package.json` or cut release tags by hand.
 
-Never bump versions or create release tags by hand.
+**How it works:**
+
+1. Every PR merged into `dev` with a Conventional Commit title (see [Commit style](#commit-style)) feeds the Release Please workflow, which runs on every push to `dev`.
+2. The workflow maintains a rolling release PR — **"chore: release X.Y.Z"** — that bumps `package.json` and generates `CHANGELOG.md` from those commits.
+3. Merging the release PR tags `vX.Y.Z`, creates the GitHub release, and triggers the **Publish to npm** workflow (requires the `NPM_TOKEN` repository secret).
+4. Finish by opening and merging a `dev` → `main` promotion PR — `main` and the docs site then reflect the released state.
+
+**Version impact of each PR title:**
+
+| PR title | Version bump |
+| --- | --- |
+| `feat: …` | minor (1.2.3 → 1.3.0) |
+| `fix: …` | patch (1.2.3 → 1.2.4) |
+| `feat!: …` / `BREAKING CHANGE:` footer | major (1.2.3 → 2.0.0) |
+| `docs:`, `chore:`, `refactor:`, `test:`, `ci:` | none |
+
+Release Please targets `dev` rather than `main` on purpose: version bumps travel with the regular promotion PRs instead of colliding with them, and every step works through pull requests, so branch protection stays fully enforced.
