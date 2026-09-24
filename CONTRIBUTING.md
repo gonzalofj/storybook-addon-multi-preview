@@ -28,7 +28,12 @@ These rules are binding for everyone, including the maintainer:
 
 ## Commit style
 
-Short imperative subject line (50–72 characters), optionally a body explaining *why* the change was needed. Match the existing history.
+PR titles follow [Conventional Commits](https://www.conventionalcommits.org) — squash merges use the PR title as the commit message, and CI rejects non-conventional titles:
+
+- `feat:` — new feature → bumps the **minor** version
+- `fix:` — bug fix → bumps the **patch** version
+- `docs:`, `chore:`, `refactor:`, `test:`, `ci:` — no release on their own
+- `feat!:` / `fix!:` (or a `BREAKING CHANGE:` footer) → bumps the **major** version
 
 ## Opening issues
 
@@ -42,8 +47,24 @@ Short imperative subject line (50–72 characters), optionally a body explaining
 3. Make sure `bun run build`, `bun run typecheck`, and `bun run test` all pass — CI runs on every PR.
 4. Open the PR **against `dev`**. PRs targeting `main` are reserved for release promotion by the maintainer.
 
-## Release process (maintainers)
+## Versioning and releases
 
-1. Merge `dev` into `main` via pull request.
-2. Tag the release commit on `main` as `vX.Y.Z` (matching the package.json version).
-3. The **Publish to npm** workflow builds and publishes to npm automatically (requires the `NPM_TOKEN` repository secret).
+Versions follow [SemVer](https://semver.org) and are fully automated via [Release Please](https://github.com/googleapis/release-please) — never bump `package.json` or cut release tags by hand.
+
+**How it works:**
+
+1. Every PR merged into `dev` with a Conventional Commit title (see [Commit style](#commit-style)) feeds the Release Please workflow, which runs on every push to `dev`.
+2. The workflow maintains a rolling release PR — **"chore: release X.Y.Z"** — that bumps `package.json` and generates `CHANGELOG.md` from those commits.
+3. Merging the release PR tags `vX.Y.Z`, creates the GitHub release, and triggers the **Publish to npm** workflow (requires the `NPM_TOKEN` repository secret).
+4. Finish by opening and merging a `dev` → `main` promotion PR — `main` and the docs site then reflect the released state.
+
+**Version impact of each PR title:**
+
+| PR title | Version bump |
+| --- | --- |
+| `feat: …` | minor (1.2.3 → 1.3.0) |
+| `fix: …` | patch (1.2.3 → 1.2.4) |
+| `feat!: …` / `BREAKING CHANGE:` footer | major (1.2.3 → 2.0.0) |
+| `docs:`, `chore:`, `refactor:`, `test:`, `ci:` | none |
+
+Release Please targets `dev` rather than `main` on purpose: version bumps travel with the regular promotion PRs instead of colliding with them, and every step works through pull requests, so branch protection stays fully enforced.
