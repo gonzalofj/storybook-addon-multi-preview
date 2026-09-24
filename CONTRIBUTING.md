@@ -49,28 +49,10 @@ PR titles follow [Conventional Commits](https://www.conventionalcommits.org) —
 
 ## Versioning and releases
 
-Versions follow [SemVer](https://semver.org) and are fully automated via [Release Please](https://github.com/googleapis/release-please) — never bump `package.json` or cut release tags by hand.
+Releases are fully automated by [semantic-release](https://semantic-release.gitbook.io/semantic-release/) — never bump `package.json` or create release tags by hand. Versions follow [SemVer](https://semver.org) and are derived from Conventional Commit titles (see [Commit style](#commit-style)):
 
-**How it works:**
+- **Merge to `dev`** containing `feat:`/`fix:` changes → a **beta** release is published immediately to the npm **`beta`** dist-tag (`1.0.0-beta.1`, `1.0.0-beta.2`, …). Merges touching only `docs:`/`ci:`/`chore:`/`refactor:`/`test:` publish nothing.
+- **Merge `dev` → `main`** → the **stable** release is published to **`latest`** (`1.0.0`). Promotion is the release. Use a **merge commit** for the promotion (or title the squash `feat:`/`fix:`) — semantic-release reads the commit titles that land on `main`, and a `chore:`-titled squash would release nothing.
+- `feat!:` / `BREAKING CHANGE:` footers bump the major version on the next release.
 
-1. Every PR merged into `dev` with a Conventional Commit title (see [Commit style](#commit-style)) feeds the Release Please workflow, which runs on every push to `dev`.
-2. The workflow maintains a rolling release PR — **"chore: release X.Y.Z"** — that bumps `package.json` and generates `CHANGELOG.md` from those commits.
-3. Merging the release PR tags `vX.Y.Z`, creates the GitHub release, and triggers the **Publish to npm** workflow (requires the `NPM_TOKEN` repository secret).
-4. Finish by opening and merging a `dev` → `main` promotion PR — `main` and the docs site then reflect the released state.
-
-**Version impact of each PR title:**
-
-| PR title | Version bump |
-| --- | --- |
-| `feat: …` | minor (1.2.3 → 1.3.0) |
-| `fix: …` | patch (1.2.3 → 1.2.4) |
-| `feat!: …` / `BREAKING CHANGE:` footer | major (1.2.3 → 2.0.0) |
-| `docs:`, `chore:`, `refactor:`, `test:`, `ci:` | none |
-
-Release Please targets `dev` rather than `main` on purpose: version bumps travel with the regular promotion PRs instead of colliding with them, and every step works through pull requests, so branch protection stays fully enforced.
-
-### Beta channel
-
-Releases currently publish to the **beta** channel, not production: the release PR proposes prerelease versions (`1.1.0-beta.N`) and npm serves them only via `npm install storybook-addon-multi-preview@beta` — the `latest` dist-tag is untouched.
-
-To go stable, merge a commit whose message contains a `Release-As: 1.1.0` footer — the next release PR will propose exactly that stable version. (Alternatively, a PR that removes `"versioning": "prerelease"` from `release-please-config.json` returns to normal semver proposals; `prerelease: true` only flags the GitHub release object and does not affect version numbers.)
+Release notes live in GitHub Releases (no `CHANGELOG.md` file is kept). Publishing requires the `NPM_TOKEN` secret — a token allowed to bypass 2FA (granular token with bypass enabled, or a classic Automation token).
