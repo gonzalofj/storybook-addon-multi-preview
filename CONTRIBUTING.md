@@ -52,7 +52,7 @@ PR titles follow [Conventional Commits](https://www.conventionalcommits.org) —
 Releases are fully automated by [semantic-release](https://semantic-release.gitbook.io/semantic-release/) — never bump `package.json` or create release tags by hand. Versions follow [SemVer](https://semver.org) and are derived from Conventional Commit titles (see [Commit style](#commit-style)):
 
 - **Merge to `dev`** containing `feat:`/`fix:` changes → a **beta** release is published immediately to the npm **`beta`** dist-tag (`1.0.0-beta.1`, `1.0.0-beta.2`, …). Merges touching only `docs:`/`ci:`/`chore:`/`refactor:`/`test:` publish nothing.
-- **Merge `dev` → `main`** → the **stable** release is published to **`latest`** (`1.0.0`). Promotion is the release.
+- **Merge `dev` → `main`** → the **stable** release is published to **`latest`** (`1.0.0`). Promotion is the release. Use a **merge commit** for the promotion (or title the squash `feat:`/`fix:`) — semantic-release reads the commit titles that land on `main`, and a `chore:`-titled squash would release nothing.
 - `feat!:` / `BREAKING CHANGE:` footers bump the major version on the next release.
 
 Release notes live in GitHub Releases (no `CHANGELOG.md` file is kept). Publishing requires the `NPM_TOKEN` secret — a token allowed to bypass 2FA (granular token with bypass enabled, or a classic Automation token).
