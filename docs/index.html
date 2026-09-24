@@ -111,20 +111,18 @@
   tr:last-child td { border-bottom: none; }
   td code { white-space: nowrap; }
 
-  /* Screenshot placeholders */
-  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 22px; }
-  .shot {
-    border: 2px dashed rgba(255, 72, 132, 0.45);
-    border-radius: 14px;
+  /* Screenshots */
+  .shots { display: grid; gap: 28px; margin-top: 22px; }
+  .shots figure {
+    margin: 0;
     background: var(--card);
-    min-height: 300px;
-    display: grid;
-    place-items: center;
-    padding: 24px;
-    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
   }
-  .shot .cap { color: var(--muted); font-size: 14.5px; max-width: 230px; }
-  .shot .cap strong { display: block; color: var(--accent); margin-bottom: 6px; }
+  .shots img { display: block; width: 100%; height: auto; border-radius: 8px; }
+  .shots figcaption { color: var(--muted); font-size: 14.5px; padding: 10px 6px 4px; text-align: center; }
+  .shots figcaption strong { color: var(--accent); }
 
   /* Contributing + footer */
   .contribute {
@@ -237,12 +235,18 @@ export default config;</code></pre>
     <h2>Screenshots</h2>
     <p>The real thing, in action:</p>
     <div class="shots">
-      <!-- Replace this placeholder with: <img src="compare-grid.png" alt="Compare grid with several viewports side by side" style="width:100%;border-radius:14px"> -->
-      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>will show the compare grid in action</div></div>
-      <!-- Replace this placeholder with: <img src="fit-zoom.png" alt="Fit zoom mode scaling frames to fit" style="width:100%;border-radius:14px"> -->
-      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>Fit zoom — every viewport scaled into view</div></div>
-      <!-- Replace this placeholder with: <img src="no-zoom.png" alt="No zoom mode at natural size" style="width:100%;border-radius:14px"> -->
-      <div class="shot"><div class="cap"><strong>Screenshot placeholder</strong>No zoom — natural-size frames for pixel inspection</div></div>
+      <figure>
+        <img src="screenshots/toolbar-dropdown.png" alt="Storybook toolbar with the multi-preview split-screen icon and its dropdown open, showing Fit zoom and No zoom" loading="lazy">
+        <figcaption><strong>Toolbar dropdown</strong> — click the split-screen icon to pick a zoom mode.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/fit-zoom.png" alt="Compare grid with four viewports side by side, scaled to fit the preview area" loading="lazy">
+        <figcaption><strong>Fit zoom</strong> — every configured viewport scaled into view, side by side.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/no-zoom.png" alt="Compare grid with frames rendered at natural size" loading="lazy">
+        <figcaption><strong>No zoom</strong> — frames at natural size for pixel-level inspection.</figcaption>
+      </figure>
     </div>
   </section>
 
