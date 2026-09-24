@@ -28,7 +28,12 @@ These rules are binding for everyone, including the maintainer:
 
 ## Commit style
 
-Short imperative subject line (50–72 characters), optionally a body explaining *why* the change was needed. Match the existing history.
+PR titles follow [Conventional Commits](https://www.conventionalcommits.org) — squash merges use the PR title as the commit message, and CI rejects non-conventional titles:
+
+- `feat:` — new feature → bumps the **minor** version
+- `fix:` — bug fix → bumps the **patch** version
+- `docs:`, `chore:`, `refactor:`, `test:`, `ci:` — no release on their own
+- `feat!:` / `fix!:` (or a `BREAKING CHANGE:` footer) → bumps the **major** version
 
 ## Opening issues
 
@@ -42,8 +47,11 @@ Short imperative subject line (50–72 characters), optionally a body explaining
 3. Make sure `bun run build`, `bun run typecheck`, and `bun run test` all pass — CI runs on every PR.
 4. Open the PR **against `dev`**. PRs targeting `main` are reserved for release promotion by the maintainer.
 
-## Release process (maintainers)
+## Release process (automated)
 
-1. Merge `dev` into `main` via pull request.
-2. Tag the release commit on `main` as `vX.Y.Z` (matching the package.json version).
-3. The **Publish to npm** workflow builds and publishes to npm automatically (requires the `NPM_TOKEN` repository secret).
+1. Merge feature PRs into `dev` with Conventional Commit titles (see above).
+2. The **Release Please** workflow maintains a release PR — "chore: release X.Y.Z" — that bumps `package.json` and updates `CHANGELOG.md` from the merged commits.
+3. Merging that release PR tags `vX.Y.Z` and creates the GitHub release automatically, which runs the **Publish to npm** workflow (requires the `NPM_TOKEN` repository secret).
+4. Promote by opening and merging a `dev` → `main` pull request — this updates the docs site and leaves `main` reflecting the released state.
+
+Never bump versions or create release tags by hand.
