@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/storybook-addon-multi-preview)](https://www.npmjs.com/package/storybook-addon-multi-preview)
 [![license](https://img.shields.io/npm/l/storybook-addon-multi-preview)](https://github.com/gonzalofj/storybook-addon-multi-preview/blob/main/LICENSE)
-[![CI](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml)
+[![CI](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml)
 
 A [Storybook](https://storybook.js.org) addon that renders the active story once per configured
 viewport, **side by side**, each inside a **real iframe** — so media queries, `vw`/`vh` units and
