@@ -73,4 +73,4 @@ Release Please targets `dev` rather than `main` on purpose: version bumps travel
 
 Releases currently publish to the **beta** channel, not production: the release PR proposes prerelease versions (`1.1.0-beta.N`) and npm serves them only via `npm install storybook-addon-multi-preview@beta` — the `latest` dist-tag is untouched.
 
-To go stable, open a normal PR that sets `"prerelease": false` in `release-please-config.json`; the next release PR then promotes the current beta to the stable version, and merging it moves `latest`.
+To go stable, merge a commit whose message contains a `Release-As: 1.1.0` footer — the next release PR will propose exactly that stable version. (Alternatively, a PR that removes `"versioning": "prerelease"` from `release-please-config.json` returns to normal semver proposals; `prerelease: true` only flags the GitHub release object and does not affect version numbers.)
