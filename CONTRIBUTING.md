@@ -24,7 +24,7 @@ These rules are binding for everyone, including the maintainer:
 
 - **`main`** — releases only. Never commit directly; changes land exclusively via pull request from `dev`.
 - **`dev`** — integration branch. Never commit directly; changes land exclusively via pull requests from feature branches or forks.
-- Feature branches follow `feat/<topic>` or `fix/<topic>` naming, branched off `dev`.
+- Feature branches follow `feat/<topic>`, `fix/<topic>`, or `ci/<topic>` naming, branched off `dev`.
 
 ## Commit style
 
