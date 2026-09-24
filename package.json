@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-multi-preview",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Storybook toolbar addon that renders the active story in several Storybook viewports side by side, each in a real iframe",
   "keywords": [
     "storybook-addon",
