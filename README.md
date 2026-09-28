@@ -1,8 +1,12 @@
 # storybook-addon-multi-preview
 
-[![npm version](https://img.shields.io/npm/v/storybook-addon-multi-preview)](https://www.npmjs.com/package/storybook-addon-multi-preview)
-[![license](https://img.shields.io/npm/l/storybook-addon-multi-preview)](https://github.com/gonzalofj/storybook-addon-multi-preview/blob/main/LICENSE)
-[![CI](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml)
+||||
+| :---: | :---: | :---: |
+|[![npm version](https://img.shields.io/npm/v/storybook-addon-multi-preview)](https://www.npmjs.com/package/storybook-addon-multi-preview)|[![license](https://img.shields.io/npm/l/storybook-addon-multi-preview)](https://github.com/gonzalofj/storybook-addon-multi-preview/blob/main/LICENSE)|[![CI](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/gonzalofj/storybook-addon-multi-preview/actions/workflows/ci.yml)|
+||||
+
+
+
 
 A [Storybook](https://storybook.js.org) addon that renders the active story once per configured
 viewport, **side by side**, each inside a **real iframe** — so media queries, `vw`/`vh` units and
@@ -10,6 +14,10 @@ fluid typography behave at each frame's true width, exactly as they would on tha
 
 Activate it from the toolbar: a dropdown (split-screen icon) switches the canvas between a single
 preview and a compare grid of every configured viewport, scaled to fit or shown at natural size.
+
+
+
+![Fit zoom — the compare grid rendering every configured viewport side by side, scaled to fit](docs/screenshots/fit-zoom.png)
 
 ## Requirements
 
