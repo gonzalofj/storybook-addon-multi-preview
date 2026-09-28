@@ -265,6 +265,37 @@ export default config;</code></pre>
   <section id="configuration">
     <h2>Configuration</h2>
     <p>Tune per story or per project with the <code>multiPreview</code> parameter:</p>
+<pre><code>// MyComponent.stories.ts (CSF3) — per story
+const meta = {
+  component: MyComponent,
+  parameters: {
+    multiPreview: {
+      viewports: ['mobile1', 'tablet'], // subset of viewport option keys (default: all)
+      zoom: 0.5,                        // number | 'fit' | 'none' (default: 'fit')
+      gap: 24,                          // px between frames (default: 24)
+      padding: 16,                      // px around the grid (default: 16)
+    },
+  },
+};
+export default meta;</code></pre>
+<pre><code>// .storybook/preview.ts — project-wide defaults
+const preview = {
+  parameters: {
+    multiPreview: {
+      gap: 12,
+    },
+  },
+};
+export default preview;</code></pre>
+<pre><code>// Turn the addon off for specific stories
+const meta = {
+  component: IsolatedWidget,
+  parameters: {
+    multiPreview: { disable: true },
+  },
+};
+export default meta;</code></pre>
+    <p>Full parameter reference:</p>
     <div class="table-scroll">
       <table>
         <thead>
