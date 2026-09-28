@@ -130,6 +130,8 @@ your configuration, so an explicit numeric `parameters.multiPreview.zoom` keeps 
 ## Links
 
 - [Documentation](https://gonzalofj.github.io/storybook-addon-multi-preview/)
+- [npm package](https://www.npmjs.com/package/storybook-addon-multi-preview)
+- [Storybook listing](https://storybook.js.org/addons/storybook-addon-multi-preview)
 - [GitHub repository](https://github.com/gonzalofj/storybook-addon-multi-preview)
 - [Issue tracker](https://github.com/gonzalofj/storybook-addon-multi-preview/issues)
 
